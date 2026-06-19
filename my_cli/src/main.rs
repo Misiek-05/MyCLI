@@ -5,9 +5,8 @@ mod functions;
 use clap::Parser;
 use cli_struct::{Cli};
 use enums_file::{Commands};
-use functions::{welcome, touch};
+use functions::{welcome, touch, cat, ls, pwd};
 
-use crate::functions::cat;
 
 fn main() {
     let args = Cli::parse();
@@ -16,6 +15,8 @@ fn main() {
         Commands::Welcome { count } => { welcome(count); }
         Commands::Touch { name , extension} => { touch(name, extension); }
         Commands::Cat { name, amount } => { cat(name, amount);}
+        Commands::Pwd {} => { pwd(); }
+        Commands::Ls {} => { ls(); }
     }
 
 

@@ -17,6 +17,7 @@ pub enum Commands {
         #[arg(short, long)]
         extension: String
     }, 
+    // Print file
     Cat {
         /// file to print into command line
         #[arg(short, long)]
@@ -25,5 +26,8 @@ pub enum Commands {
         /// amount of words to print from file
         #[arg(short = 'a', long = "amount")]
         amount: Option<i32>
-    }
+    },
+    // Curent working directory
+    Pwd,
+    Ls 
 }
