@@ -1,5 +1,3 @@
-use crate::cli_struct::{Cli};
-use crate::enums_file::{Commands};
 use chrono::*;
 use colored::*;
 use std::env;
@@ -16,12 +14,10 @@ pub fn welcome(count: &Option<u8>) {
     }
 }
 
-pub fn touch(name: &str, extension: &str) {
-    let filename = format!("{}.{}", name, extension);
-
-    match File::create(&filename) {
-        Ok(_) => println!("Successfully created file: {}", filename),
-        Err(e) => eprintln!("Error creating file {}: {}", filename, e),
+pub fn touch(name: &str) {
+    match File::create(&name) {
+        Ok(_) => println!("Successfully created file: {}", name),
+        Err(e) => eprintln!("Error creating file {}: {}", name, e),
     }
 }
 
@@ -94,7 +90,40 @@ pub fn ls() {
         }
         }
         Err(e) => {
-            eprintln!("Error while getting current dir: {}", e)
+            eprintln!("Error while getting current dir: {}", e);
+        }
+    }
+}
+
+pub fn cp(source_name: &str, dest_name: &str) {
+    match std::fs::copy(source_name, dest_name) {
+        Ok(_) => {
+            println!("Successfully copied file");
+        }
+        Err(e) => {
+            eprintln!("Error during copy: {}", e);
+        }
+    }
+}
+
+pub fn mv(source_name: &str, dest_name: &str) {
+    match std::fs::rename(source_name, dest_name) {
+        Ok(_) => {
+            println!("Successfully moved/rename file");
+        }
+        Err(e) => {
+            eprintln!("Error during moving file: {}", e);
+        }
+    }
+}
+
+pub fn mkdir(dir_name: &str) {
+    match std::fs::create_dir_all(dir_name) {
+        Ok(_) => {
+            println!("Successfully created directory: {}", dir_name);
+        }
+        Err(e) => {
+            eprintln!("Error: {}", e);
         }
     }
 }

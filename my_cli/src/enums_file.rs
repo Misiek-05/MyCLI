@@ -9,25 +9,47 @@ pub enum Commands {
     }, 
     /// Create new file
     Touch {
-        /// name of the files (and path)
+        /// name of the file (and path)
         #[arg(short, long)]
         name: String,
-
-        /// extension of the file
-        #[arg(short, long)]
-        extension: String
     }, 
-    // Print file
+    /// Print file
     Cat {
         /// file to print into command line
         #[arg(short, long)]
         name: String,
 
         /// amount of words to print from file
-        #[arg(short = 'a', long = "amount")]
+        #[arg(short = 'b', long = "number")]
         amount: Option<i32>
     },
-    // Curent working directory
+    /// Curent working directory
     Pwd,
-    Ls 
+    Ls,
+    /// Copy
+    Cp {
+        /// source file
+        #[arg(short = 's', long = "source")]
+        source_name: String,
+
+        /// destination file
+        #[arg(short = 'd', long = "dest")]
+        dest_name: String,
+    },
+    /// move/rename file (Can both)
+    Mv {
+        /// source file
+        #[arg(short = 's', long = "source")]
+        source_name: String,
+
+        /// destination file
+        #[arg(short = 'd', long = "dest")]
+        dest_name: String,
+    },
+    /// create directory
+    Mkdir {
+        /// name of the new directory (and path)
+        #[arg(short, long)]
+        name: String,
+    },
 }
