@@ -1,13 +1,12 @@
 mod cli_struct;
 mod enums_file;
+mod subcommands;
 mod functions;
 
 use clap::Parser;
 use cli_struct::{Cli};
 use enums_file::{Commands};
-use functions::{welcome, touch, cat, ls, pwd, cp, mv};
-
-use crate::functions::mkdir;
+use subcommands::{welcome, touch, cat, ls, pwd, cp, mv, mkdir};
 
 
 fn main() {
