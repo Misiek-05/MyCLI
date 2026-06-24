@@ -2,7 +2,8 @@ use chrono::*;
 use colored::*;
 use std::env;
 use std::fs::{self, File};
-use std::os::windows::fs::MetadataExt;
+use std::io::{Seek, SeekFrom, Read};
+use std::os::windows::fs::{FileExt, MetadataExt};
 use crate::functions::{copy_to_clipboard};
 
 pub fn welcome(count: &Option<u8>) {
@@ -128,4 +129,56 @@ pub fn mkdir(dir_name: &str) {
             eprintln!("Error: {}", e);
         }
     }
+}
+
+pub fn tail(filename: &str, lines: &Option<u8>) {
+    let mut max_lines = lines.unwrap_or(10);
+    
+    let mut file = File::open(filename).unwrap();
+    let length = file.metadata().unwrap().len();
+
+    let mut pos = length;
+    let mut finded_lines = 0;
+    let mut buffer = [0u8; 1];
+
+    while pos > 0 && finded_lines < max_lines {
+        pos -= 1;
+        file.seek(SeekFrom::Start(pos)).unwrap();
+        file.read_exact(&mut buffer).unwrap();
+
+        if buffer[0] == b'\n' {
+            finded_lines += 1;
+        }
+    }
+
+    file.seek(SeekFrom::Start(pos)).unwrap();
+    let mut final_output = String::new();
+    file.read_to_string(&mut final_output).unwrap();
+    print!("{}", final_output);
+}
+
+pub fn head(filename: &str, lines: &Option<u8>) {
+    let mut max_lines = lines.unwrap_or(10);
+    
+    let mut file = File::open(filename).unwrap();
+    let length = file.metadata().unwrap().len();
+
+    let mut pos = 0;
+    let mut finded_lines = 0;
+    let mut buffer = [0u8; 1];
+
+    while pos < length && finded_lines < max_lines {
+        file.seek(SeekFrom::Start(pos)).unwrap();
+        file.read_exact(&mut buffer).unwrap();
+
+        if buffer[0] == b'\n' {
+            finded_lines += 1;
+        }
+        pos += 1;
+    }
+
+    file.seek(SeekFrom::Start(0)).unwrap();
+    let mut final_output = String::new();
+    file.take(pos).read_to_string(&mut final_output).unwrap();
+    print!("{}", final_output);
 }

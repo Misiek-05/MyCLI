@@ -6,7 +6,7 @@ mod functions;
 use clap::Parser;
 use cli_struct::{Cli};
 use enums_file::{Commands};
-use subcommands::{welcome, touch, cat, ls, pwd, cp, mv, mkdir};
+use subcommands::{welcome, touch, cat, ls, pwd, cp, mv, mkdir, head, tail};
 
 
 fn main() {
@@ -18,9 +18,11 @@ fn main() {
         Commands::Cat { name, amount } => { cat(name, amount);}
         Commands::Pwd {} => { pwd(); }
         Commands::Ls {} => { ls(); }
-        Commands::Cp {source_name, dest_name} => { cp(source_name, dest_name); }
-        Commands::Mv {source_name, dest_name} => { mv(source_name, dest_name);}
-        Commands::Mkdir {name} => {mkdir(name);}
+        Commands::Cp { source_name, dest_name} => { cp(source_name, dest_name); }
+        Commands::Mv { source_name, dest_name} => { mv(source_name, dest_name); }
+        Commands::Mkdir { name} => { mkdir(name); }
+        Commands::Tail { name, count } => { tail(name, count); }
+        Commands::Head { name, count } => { head(name, count);}
     }
 
 

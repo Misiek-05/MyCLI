@@ -52,4 +52,24 @@ pub enum Commands {
         #[arg(short, long)]
         name: String,
     },
+    /// Display lines from the back of the file
+    Tail {
+        /// name of the file
+        #[arg(short, long)]
+        name: String,
+
+        /// amount of lines (Default = 10)
+        #[arg(short, long)]
+        count: Option<u8>,
+    },
+    /// Display lines from the begining of the file
+    Head {
+        /// name of the file
+        #[arg(short, long)]
+        name: String,
+
+        /// amount of lines (Default = 10)
+        #[arg(short, long)]
+        count: Option<u8>,
+    }
 }

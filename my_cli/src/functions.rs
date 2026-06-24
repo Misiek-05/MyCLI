@@ -2,8 +2,8 @@ use arboard::Clipboard;
 
 pub fn copy_to_clipboard(text: &str) {
     match Clipboard::new() {
-        Ok(mut Clipboard) => {
-            match Clipboard.set_text(text) {
+        Ok(mut clipboard) => {
+            match clipboard.set_text(text) {
                 Ok(_) => {
                     println!("Successfully put in Clipboard");
                 }
