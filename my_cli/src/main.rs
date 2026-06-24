@@ -6,7 +6,7 @@ mod functions;
 use clap::Parser;
 use cli_struct::{Cli};
 use enums_file::{Commands};
-use subcommands::{welcome, touch, cat, ls, pwd, cp, mv, mkdir, head, tail};
+use subcommands::{welcome, touch, cat, ls, pwd, cp, rm, mv, mkdir, head, tail, echo};
 
 
 fn main() {
@@ -23,6 +23,8 @@ fn main() {
         Commands::Mkdir { name} => { mkdir(name); }
         Commands::Tail { name, count } => { tail(name, count); }
         Commands::Head { name, count } => { head(name, count);}
+        Commands::Echo { text, name } => { echo(text, name.clone()); }
+        Commands::rm { name }  => { rm(name); }
     }
 
 

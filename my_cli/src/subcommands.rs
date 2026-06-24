@@ -1,9 +1,10 @@
 use chrono::*;
 use colored::*;
 use std::env;
-use std::fs::{self, File};
-use std::io::{Seek, SeekFrom, Read};
-use std::os::windows::fs::{FileExt, MetadataExt};
+use std::fs::{self, File, OpenOptions};
+use std::io::{Seek, SeekFrom, Read, Write};
+use std::os::windows::fs::{MetadataExt};
+use std::path::Path;
 use crate::functions::{copy_to_clipboard};
 
 pub fn welcome(count: &Option<u8>) {
@@ -98,6 +99,30 @@ pub fn ls() {
     }
 }
 
+pub fn rm(filename: &str) {
+    let path = Path::new(filename);
+    
+    if path.is_file() {
+        match std::fs::remove_file(filename) {
+            Ok(_) => {
+                println!("File {} removed successfully", filename);
+            }
+            Err(e) => {
+                eprintln!("Error while removing file: {}", e);
+            }
+        }
+    } else if path.is_dir() {
+        match std::fs::remove_dir(filename) {
+            Ok(_) => {
+                println!("directory {} removed successfully", filename)
+            }
+            Err(e) => {
+                eprintln!("Error while removing directory: {}", e);
+            }
+        }
+    }
+}
+
 pub fn cp(source_name: &str, dest_name: &str) {
     match std::fs::copy(source_name, dest_name) {
         Ok(_) => {
@@ -132,7 +157,7 @@ pub fn mkdir(dir_name: &str) {
 }
 
 pub fn tail(filename: &str, lines: &Option<u8>) {
-    let mut max_lines = lines.unwrap_or(10);
+    let max_lines = lines.unwrap_or(10);
     
     let mut file = File::open(filename).unwrap();
     let length = file.metadata().unwrap().len();
@@ -158,7 +183,7 @@ pub fn tail(filename: &str, lines: &Option<u8>) {
 }
 
 pub fn head(filename: &str, lines: &Option<u8>) {
-    let mut max_lines = lines.unwrap_or(10);
+    let max_lines = lines.unwrap_or(10);
     
     let mut file = File::open(filename).unwrap();
     let length = file.metadata().unwrap().len();
@@ -182,3 +207,21 @@ pub fn head(filename: &str, lines: &Option<u8>) {
     file.take(pos).read_to_string(&mut final_output).unwrap();
     print!("{}", final_output);
 }
+
+pub fn echo(text: &str, maybe_file: Option<String>) {
+    let file = maybe_file.as_deref().unwrap_or("No file");
+
+    if file == "No file" {
+        println!("{}", text);
+    } else {
+        match std::fs::write(file, text) {
+            Ok(_) => {
+                println!("Successfully")
+            }
+            Err(e) => {
+                eprintln!("Error {}", e);
+            }
+        }
+    }
+}
+

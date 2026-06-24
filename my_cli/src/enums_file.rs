@@ -10,13 +10,11 @@ pub enum Commands {
     /// Create new file
     Touch {
         /// name of the file (and path)
-        #[arg(short, long)]
         name: String,
     }, 
     /// Print file
     Cat {
         /// file to print into command line
-        #[arg(short, long)]
         name: String,
 
         /// amount of words to print from file
@@ -29,33 +27,31 @@ pub enum Commands {
     /// Copy
     Cp {
         /// source file
-        #[arg(short = 's', long = "source")]
         source_name: String,
 
         /// destination file
-        #[arg(short = 'd', long = "dest")]
         dest_name: String,
+    },
+    rm {
+        /// name of the file
+        name: String,
     },
     /// move/rename file (Can both)
     Mv {
         /// source file
-        #[arg(short = 's', long = "source")]
         source_name: String,
 
         /// destination file
-        #[arg(short = 'd', long = "dest")]
         dest_name: String,
     },
     /// create directory
     Mkdir {
         /// name of the new directory (and path)
-        #[arg(short, long)]
         name: String,
     },
     /// Display lines from the back of the file
     Tail {
         /// name of the file
-        #[arg(short, long)]
         name: String,
 
         /// amount of lines (Default = 10)
@@ -65,11 +61,19 @@ pub enum Commands {
     /// Display lines from the begining of the file
     Head {
         /// name of the file
-        #[arg(short, long)]
         name: String,
 
         /// amount of lines (Default = 10)
         #[arg(short, long)]
         count: Option<u8>,
+    },
+    Echo {
+        /// Text input
+        text: String,
+
+        /// optional file to print text into
+        #[arg(short, long)]
+        name: Option<String>
     }
+
 }
