@@ -1,6 +1,6 @@
 use chrono::*;
 use colored::*;
-use std::env;
+use std::{env, vec};
 use std::fs::{self, File, OpenOptions};
 use std::io::{Seek, SeekFrom, Read, Write};
 use std::os::windows::fs::{MetadataExt};
@@ -222,6 +222,45 @@ pub fn echo(text: &str, maybe_file: Option<String>) {
                 eprintln!("Error {}", e);
             }
         }
+    }
+}
+
+pub fn cal() {
+    let today = Local::now().date_naive();
+    let current_year = today.year();
+    let current_month = today.month();
+    let current_day = today.day();
+
+    let mut current_date = NaiveDate::from_ymd_opt(current_year, current_month, 1).expect("Invalid date components");
+
+    println!("          {}", current_date.format("%b %Y"));
+    let week: Vec<String> = vec!["Mon".to_string(), "Tue".to_string(), "Wed".to_string(), "Thu".to_string(), "Fri".to_string(), "Sat".to_string(), "Sun".to_string()];  
+    for day in &week {
+        print!("{} ", day);
+    }
+    println!();
+    while current_date.month() == current_month {
+        let formatted = current_date.format("%e-%a").to_string();
+        let parts: Vec<&str> = formatted.split("-").collect();
+        if parts[0] == " 1" {
+            let mut i = 0;
+            while parts[1].to_string() != week[i] {
+                print!("    ");
+                i+=1;
+            }
+        }
+        
+        if current_date.day() == current_day {
+            print!(" {} ", parts[0].green());
+        } else {
+            print!(" {} ", parts[0]);
+        }
+        
+        if parts[1] == "Sun" {
+            println!();
+        }
+
+        current_date += Duration::days(1);
     }
 }
 

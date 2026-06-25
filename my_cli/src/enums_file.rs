@@ -32,7 +32,7 @@ pub enum Commands {
         /// destination file
         dest_name: String,
     },
-    rm {
+    Rm {
         /// name of the file
         name: String,
     },
@@ -74,6 +74,8 @@ pub enum Commands {
         /// optional file to print text into
         #[arg(short, long)]
         name: Option<String>
-    }
+    },
+    /// Display calendar
+    Cal
 
 }
