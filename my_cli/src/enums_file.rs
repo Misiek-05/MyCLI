@@ -76,6 +76,9 @@ pub enum Commands {
         name: Option<String>
     },
     /// Display calendar
-    Cal
-
+    Cal {
+        /// print whole year
+        #[arg(short,long)]
+        year: bool
+    },
 }

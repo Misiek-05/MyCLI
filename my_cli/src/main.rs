@@ -23,9 +23,9 @@ fn main() {
         Commands::Mkdir { name} => { mkdir(name); }
         Commands::Tail { name, count } => { tail(name, count); }
         Commands::Head { name, count } => { head(name, count);}
-        Commands::Echo { text, name } => { echo(text, name.clone()); }
+        Commands::Echo { text, name } => { echo(text, name); }
         Commands::Rm { name }  => { rm(name); }
-        Commands::Cal {} => { cal(); }
+        Commands::Cal { year} => { let _ = cal(year); }
     }
 
 

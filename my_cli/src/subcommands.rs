@@ -1,11 +1,12 @@
 use chrono::*;
 use colored::*;
 use std::{env, vec};
-use std::fs::{self, File, OpenOptions};
-use std::io::{Seek, SeekFrom, Read, Write};
+use std::fs::{self, File};
+use std::io::{Read, Seek, SeekFrom};
 use std::os::windows::fs::{MetadataExt};
 use std::path::Path;
-use crate::functions::{copy_to_clipboard};
+use crate::functions::{copy_to_clipboard, print_month};
+
 
 pub fn welcome(count: &Option<u8>) {
     if *count == None {
@@ -20,7 +21,7 @@ pub fn welcome(count: &Option<u8>) {
 pub fn touch(name: &str) {
     match File::create(&name) {
         Ok(_) => println!("Successfully created file: {}", name),
-        Err(e) => eprintln!("Error creating file {}: {}", name, e),
+        Err(e) => eprintln!("Error creating file {}: {}", name, e)
     }
 }
 
@@ -208,7 +209,7 @@ pub fn head(filename: &str, lines: &Option<u8>) {
     print!("{}", final_output);
 }
 
-pub fn echo(text: &str, maybe_file: Option<String>) {
+pub fn echo(text: &str, maybe_file: &Option<String>) {
     let file = maybe_file.as_deref().unwrap_or("No file");
 
     if file == "No file" {
@@ -225,42 +226,26 @@ pub fn echo(text: &str, maybe_file: Option<String>) {
     }
 }
 
-pub fn cal() {
+pub fn cal(year: &bool) -> Result<(), std::io::Error> {
     let today = Local::now().date_naive();
     let current_year = today.year();
     let current_month = today.month();
     let current_day = today.day();
 
-    let mut current_date = NaiveDate::from_ymd_opt(current_year, current_month, 1).expect("Invalid date components");
-
-    println!("          {}", current_date.format("%b %Y"));
     let week: Vec<String> = vec!["Mon".to_string(), "Tue".to_string(), "Wed".to_string(), "Thu".to_string(), "Fri".to_string(), "Sat".to_string(), "Sun".to_string()];  
-    for day in &week {
-        print!("{} ", day);
-    }
-    println!();
-    while current_date.month() == current_month {
-        let formatted = current_date.format("%e-%a").to_string();
-        let parts: Vec<&str> = formatted.split("-").collect();
-        if parts[0] == " 1" {
-            let mut i = 0;
-            while parts[1].to_string() != week[i] {
-                print!("    ");
-                i+=1;
+
+    if *year == true {
+        let mut date = NaiveDate::from_ymd_opt(current_year, 1, 1).unwrap();
+        for _ in 0..4 {
+            for j in 0..3 {
+                print_month(&mut date, &current_day, &current_month, &current_year, &week, &(j * 32))?;
             }
-        }
-        
-        if current_date.day() == current_day {
-            print!(" {} ", parts[0].green());
-        } else {
-            print!(" {} ", parts[0]);
-        }
-        
-        if parts[1] == "Sun" {
             println!();
         }
-
-        current_date += Duration::days(1);
+    } else {
+        let mut date = NaiveDate::from_ymd_opt(current_year, current_month, 1).unwrap();
+        print_month(&mut date, &current_day, &current_month, &current_year, &week, &(0))?;
     }
-}
 
+    Ok(())
+}
